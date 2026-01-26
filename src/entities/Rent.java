@@ -15,13 +15,6 @@ public class Rent {
         this.days = days;
     }
 
-    public void calculateFinalPrice() {
-        total = this.days * equipment.getDailyPrice();
-        if (days > 7) {
-            this.total *= 0.90;
-        }
-    }
-
     public Integer getDays() {
         return days;
     }
@@ -36,6 +29,14 @@ public class Rent {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public void calculateFinalPrice() {
+        double baseValue = equipment.totalCost(days);
+        if (days > 7) {
+            baseValue *= 0.90;
+        }
+        this.total = baseValue;
     }
 
     @Override

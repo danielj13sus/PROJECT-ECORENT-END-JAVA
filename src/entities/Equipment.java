@@ -1,10 +1,10 @@
 
 package entities;
 
-public class Equipment {
+public abstract class Equipment {
 
     private String model;
-    private Double dailyPrice;
+    protected Double dailyPrice;
 
     public Equipment() {
     }
@@ -28,5 +28,9 @@ public class Equipment {
 
     public void setDailyPrice(Double dailyPrice) {
         this.dailyPrice = dailyPrice;
+    }
+
+    public double totalCost(int days) {
+        return dailyPrice * days;
     }
 }
