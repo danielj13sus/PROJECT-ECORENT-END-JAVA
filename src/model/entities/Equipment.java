@@ -39,7 +39,7 @@ public abstract class Equipment {
 
     public void validateExceptions() {
         if (dailyPrice <= 0) {
-            throw new DomainExceptions("Quantidade de dias inválido!");
+            throw new DomainExceptions("Preço da diária inválido!!");
         }
     }
 }
