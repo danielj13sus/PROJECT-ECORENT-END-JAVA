@@ -1,5 +1,7 @@
 
-package entities;
+package model.entities;
+
+import model.exceptions.DomainExceptions;
 
 public class HeavyEquipment extends Equipment {
 
@@ -11,6 +13,7 @@ public class HeavyEquipment extends Equipment {
 
     public HeavyEquipment(String model, Double dailyPrice, Double transportFee) {
         super(model, dailyPrice);
+        validateExceptions();
         this.transportFee = transportFee;
     }
 
@@ -25,5 +28,13 @@ public class HeavyEquipment extends Equipment {
     @Override
     public double totalCost(int days) {
         return super.totalCost(days) + transportFee;
+    }
+
+    @Override
+    public void validateExceptions() {
+        super.validateExceptions();
+        if (transportFee <= 0) {
+            throw new DomainExceptions("Valor de taxa de transporte inválido!");
+        }
     }
 }

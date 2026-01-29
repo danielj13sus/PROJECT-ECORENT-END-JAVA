@@ -1,5 +1,5 @@
 
-package entities;
+package model.entities;
 
 public class Tool extends Equipment {
 

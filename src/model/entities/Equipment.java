@@ -1,5 +1,7 @@
 
-package entities;
+package model.entities;
+
+import model.exceptions.DomainExceptions;
 
 public abstract class Equipment {
 
@@ -10,6 +12,7 @@ public abstract class Equipment {
     }
 
     public Equipment(String model, Double dailyPrice) {
+        validateExceptions();
         this.model = model;
         this.dailyPrice = dailyPrice;
     }
@@ -32,5 +35,11 @@ public abstract class Equipment {
 
     public double totalCost(int days) {
         return dailyPrice * days;
+    }
+
+    public void validateExceptions() {
+        if (dailyPrice <= 0) {
+            throw new DomainExceptions("Quantidade de dias inválido!");
+        }
     }
 }

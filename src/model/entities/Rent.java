@@ -1,5 +1,7 @@
 
-package entities;
+package model.entities;
+
+import model.exceptions.DomainExceptions;
 
 public class Rent {
 
@@ -11,6 +13,7 @@ public class Rent {
     }
 
     public Rent(Equipment equipment, Integer days) {
+        validateDays();
         this.equipment = equipment;
         this.days = days;
     }
@@ -37,6 +40,12 @@ public class Rent {
             baseValue *= 0.90;
         }
         this.total = baseValue;
+    }
+
+    public void validateDays() {
+        if (days <= 0) {
+            throw new DomainExceptions("Quantidade de dias inválido!");
+        }
     }
 
     @Override

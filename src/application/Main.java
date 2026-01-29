@@ -1,9 +1,10 @@
 package application;
 
-import entities.Equipment;
-import entities.HeavyEquipment;
-import entities.Rent;
-import entities.Tool;
+import model.entities.Equipment;
+import model.entities.HeavyEquipment;
+import model.entities.Rent;
+import model.entities.Tool;
+import model.exceptions.DomainExceptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,26 +23,34 @@ public class Main {
 
         char verif;
         do {
-            System.out.println("--- NOVO ALUGUEL ---");
-            System.out.print("É equipamento pesado? (s/n): ");
-            char ch = scan.next().charAt(0);
-            System.out.print("Digite o modelo do equipamento: ");
-            scan.nextLine();
-            String modelEquipment = scan.nextLine();
-            System.out.print("Digite o preço da diária: ");
-            double dailyPrice = scan.nextDouble();
-            System.out.print("Quantos dias de aluguel? ");
-            int daysRental = scan.nextInt();
-            if (ch == 's') {
-                System.out.print("Taxa de transporte: ");
-                double transportFee = scan.nextDouble();
-                equipment = new HeavyEquipment(modelEquipment, dailyPrice, transportFee);
-            } else {
-                equipment = new Tool(modelEquipment, dailyPrice);
+            try {
+                System.out.println("--- NOVO ALUGUEL ---");
+                System.out.print("É equipamento pesado? (s/n): ");
+                char ch = scan.next().charAt(0);
+                System.out.print("Digite o modelo do equipamento: ");
+                scan.nextLine();
+                String modelEquipment = scan.nextLine();
+                System.out.print("Digite o preço da diária: ");
+                double dailyPrice = scan.nextDouble();
+                System.out.print("Quantos dias de aluguel? ");
+                int daysRental = scan.nextInt();
+                if (ch == 's') {
+                    System.out.print("Taxa de transporte: ");
+                    double transportFee = scan.nextDouble();
+                    equipment = new HeavyEquipment(modelEquipment, dailyPrice, transportFee);
+                } else {
+                    equipment = new Tool(modelEquipment, dailyPrice);
+                }
+                rent = new Rent(equipment, daysRental);
+                rent.calculateFinalPrice();
+                rentals.add(rent);
             }
-            rent = new Rent(equipment, daysRental);
-            rent.calculateFinalPrice();
-            rentals.add(rent);
+            catch (DomainExceptions e) {
+                System.out.println(e.getMessage());
+            }
+            catch (RuntimeException e) {
+                System.out.println("Erro na execução!");
+            }
             System.out.println("(Adicionado à lista!)");
             System.out.print("Deseja registrar mais um aluguel? (s/n): ");
             verif = scan.next().charAt(0);
