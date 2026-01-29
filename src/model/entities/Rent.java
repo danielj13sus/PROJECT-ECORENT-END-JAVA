@@ -13,9 +13,9 @@ public class Rent {
     }
 
     public Rent(Equipment equipment, Integer days) {
-        validateDays();
         this.equipment = equipment;
         this.days = days;
+        validateDays();
     }
 
     public Integer getDays() {

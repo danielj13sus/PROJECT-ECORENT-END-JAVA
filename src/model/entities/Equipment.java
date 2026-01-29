@@ -12,9 +12,9 @@ public abstract class Equipment {
     }
 
     public Equipment(String model, Double dailyPrice) {
-        validateExceptions();
         this.model = model;
         this.dailyPrice = dailyPrice;
+        validateExceptions();
     }
 
     public String getModel() {

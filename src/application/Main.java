@@ -44,14 +44,16 @@ public class Main {
                 rent = new Rent(equipment, daysRental);
                 rent.calculateFinalPrice();
                 rentals.add(rent);
+                System.out.println("(Adicionado à lista!)");
             }
             catch (DomainExceptions e) {
                 System.out.println(e.getMessage());
             }
             catch (RuntimeException e) {
                 System.out.println("Erro na execução!");
+                scan.nextLine();
             }
-            System.out.println("(Adicionado à lista!)");
+
             System.out.print("Deseja registrar mais um aluguel? (s/n): ");
             verif = scan.next().charAt(0);
             scan.nextLine();

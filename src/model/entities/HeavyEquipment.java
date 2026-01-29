@@ -13,8 +13,8 @@ public class HeavyEquipment extends Equipment {
 
     public HeavyEquipment(String model, Double dailyPrice, Double transportFee) {
         super(model, dailyPrice);
-        validateExceptions();
         this.transportFee = transportFee;
+        validateExceptions();
     }
 
     public Double getTransportFee() {
