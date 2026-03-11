@@ -6,6 +6,8 @@ import model.entities.Rent;
 import model.entities.Tool;
 import model.exceptions.DomainExceptions;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,9 +36,10 @@ public class Main {
                 double dailyPrice = scan.nextDouble();
                 System.out.print("Quantos dias de aluguel? ");
                 int daysRental = scan.nextInt();
+                double transportFee;
                 if (ch == 's') {
                     System.out.print("Taxa de transporte: ");
-                    double transportFee = scan.nextDouble();
+                    transportFee = scan.nextDouble();
                     equipment = new HeavyEquipment(modelEquipment, dailyPrice, transportFee);
                 } else {
                     equipment = new Tool(modelEquipment, dailyPrice);
@@ -69,6 +72,19 @@ public class Main {
         }
 
         scan.close();
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\danie\\IdeaProjects\\PROJETO_ECORENT\\summary.csv"))) {
+
+            for (Rent he: rentals) {
+                bw.write(he.getEquipment().getModel() + "," + String.format("%.2f", he.getTotal()));
+                bw.newLine();
+            }
+
+            System.out.println("Arquivo criado com sucesso!");
+
+        } catch (Exception e) {
+            System.out.println("Erro crítico ao gerar o relatório: " + e.getMessage());;
+        }
 
     }
 }

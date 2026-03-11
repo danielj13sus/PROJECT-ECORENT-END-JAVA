@@ -13,8 +13,10 @@ public class HeavyEquipment extends Equipment {
 
     public HeavyEquipment(String model, Double dailyPrice, Double transportFee) {
         super(model, dailyPrice);
+        if (transportFee <= 0) {
+            throw new DomainExceptions("Valor de taxa de transporte inválido!");
+        }
         this.transportFee = transportFee;
-        validateExceptions();
     }
 
     public Double getTransportFee() {
@@ -28,13 +30,5 @@ public class HeavyEquipment extends Equipment {
     @Override
     public double totalCost(int days) {
         return super.totalCost(days) + transportFee;
-    }
-
-    @Override
-    public void validateExceptions() {
-        super.validateExceptions();
-        if (transportFee <= 0) {
-            throw new DomainExceptions("Valor de taxa de transporte inválido!");
-        }
     }
 }

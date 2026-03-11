@@ -12,9 +12,11 @@ public abstract class Equipment {
     }
 
     public Equipment(String model, Double dailyPrice) {
+        if (dailyPrice <= 0) {
+            throw new DomainExceptions("Preço da diária inválido!!");
+        }
         this.model = model;
         this.dailyPrice = dailyPrice;
-        validateExceptions();
     }
 
     public String getModel() {
@@ -35,11 +37,5 @@ public abstract class Equipment {
 
     public double totalCost(int days) {
         return dailyPrice * days;
-    }
-
-    public void validateExceptions() {
-        if (dailyPrice <= 0) {
-            throw new DomainExceptions("Preço da diária inválido!!");
-        }
     }
 }

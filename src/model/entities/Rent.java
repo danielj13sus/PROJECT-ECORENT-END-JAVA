@@ -34,6 +34,10 @@ public class Rent {
         this.total = total;
     }
 
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
     public void calculateFinalPrice() {
         double baseValue = equipment.totalCost(days);
         if (days > 7) {
