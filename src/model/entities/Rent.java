@@ -19,11 +19,11 @@ public class Rent {
     public Rent() {
     }
 
-    public Rent(DiscountService discountService, Equipment equipment, LocalDateTime finish, LocalDateTime start) {
+    public Rent(DiscountService discountService, Equipment equipment, LocalDateTime start, LocalDateTime finish) {
         this.discountService = discountService;
         this.equipment = equipment;
-        this.finish = finish;
         this.start = start;
+        this.finish = finish;
         validateDates();
     }
 
@@ -67,7 +67,7 @@ public class Rent {
 
     public void validateDates() {
         if (!finish.isAfter(start)) {
-            throw new DomainExceptions("Quantidade de dias inválido!");
+            throw new DomainExceptions("A data de devolução deve ser posterior à data de retirada!");
         }
     }
 

@@ -12,10 +12,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -54,7 +52,7 @@ public class Main {
                     equipment = new Tool(modelEquipment, dailyPrice);
                 }
                 DiscountService discountService = new StandardDiscountService();
-                rent = new Rent(discountService, equipment, finish, start);
+                rent = new Rent(discountService, equipment, start, finish);
                 rent.calculateFinalPrice();
                 rentals.add(rent);
                 System.out.println("(Adicionado à lista!)");
@@ -62,9 +60,11 @@ public class Main {
             catch (DomainExceptions e) {
                 System.out.println(e.getMessage());
             }
-            catch (RuntimeException e) {
+            catch (InputMismatchException e) {
                 System.out.println("Erro na execução!");
                 scan.nextLine();
+            } catch (DateTimeParseException e) {
+                System.out.println("Erro: Formato de data inválido!");
             }
 
             System.out.print("Deseja registrar mais um aluguel? (s/n): ");
@@ -83,7 +83,7 @@ public class Main {
 
         scan.close();
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\danie\\IdeaProjects\\PROJETO_ECORENT\\summary.csv"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("summary.csv"))) {
 
             for (Rent he: rentals) {
                 bw.write(he.getEquipment().getModel() + "," + String.format("%.2f", he.getTotal()));
