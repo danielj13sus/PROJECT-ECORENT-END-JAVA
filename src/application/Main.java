@@ -5,16 +5,20 @@ import model.entities.HeavyEquipment;
 import model.entities.Rent;
 import model.entities.Tool;
 import model.exceptions.DomainExceptions;
+import model.services.DiscountService;
+import model.services.StandardDiscountService;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         Locale.setDefault(Locale.US);
         Scanner scan = new Scanner(System.in);
@@ -34,8 +38,11 @@ public class Main {
                 String modelEquipment = scan.nextLine();
                 System.out.print("Digite o preço da diária: ");
                 double dailyPrice = scan.nextDouble();
-                System.out.print("Quantos dias de aluguel? ");
-                int daysRental = scan.nextInt();
+                System.out.print("Data de Retirada (dd/MM/yyyy HH:mm):");
+                scan.nextLine();
+                LocalDateTime start = LocalDateTime.parse(scan.nextLine(), dtf);
+                System.out.print("Data de Devolução (dd/MM/yyyy HH:mm):");
+                LocalDateTime finish = LocalDateTime.parse(scan.nextLine(), dtf);
                 double transportFee;
                 if (ch == 's') {
                     System.out.print("Taxa de transporte: ");
@@ -44,7 +51,8 @@ public class Main {
                 } else {
                     equipment = new Tool(modelEquipment, dailyPrice);
                 }
-                rent = new Rent(equipment, daysRental);
+                DiscountService discountService = new StandardDiscountService();
+                rent = new Rent(discountService, equipment, start, finish);
                 rent.calculateFinalPrice();
                 rentals.add(rent);
                 System.out.println("(Adicionado à lista!)");
@@ -52,9 +60,11 @@ public class Main {
             catch (DomainExceptions e) {
                 System.out.println(e.getMessage());
             }
-            catch (RuntimeException e) {
+            catch (InputMismatchException e) {
                 System.out.println("Erro na execução!");
                 scan.nextLine();
+            } catch (DateTimeParseException e) {
+                System.out.println("Erro: Formato de data inválido!");
             }
 
             System.out.print("Deseja registrar mais um aluguel? (s/n): ");
@@ -73,7 +83,7 @@ public class Main {
 
         scan.close();
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\danie\\IdeaProjects\\PROJETO_ECORENT\\summary.csv"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("summary.csv"))) {
 
             for (Rent he: rentals) {
                 bw.write(he.getEquipment().getModel() + "," + String.format("%.2f", he.getTotal()));
