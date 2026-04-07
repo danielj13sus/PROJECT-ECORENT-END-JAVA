@@ -41,6 +41,7 @@ public class Main {
                 System.out.print("Digite o preço da diária: ");
                 double dailyPrice = scan.nextDouble();
                 System.out.print("Data de Retirada (dd/MM/yyyy HH:mm):");
+                scan.nextLine();
                 LocalDateTime start = LocalDateTime.parse(scan.nextLine(), dtf);
                 System.out.print("Data de Devolução (dd/MM/yyyy HH:mm):");
                 LocalDateTime finish = LocalDateTime.parse(scan.nextLine(), dtf);

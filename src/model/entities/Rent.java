@@ -61,11 +61,12 @@ public class Rent {
     }
 
     public int durationInDays() {
-        return (int) Duration.between(getStart(), getFinish()).toDays();
+        int days = (int) Duration.between(getStart(), getFinish()).toDays();
+        return days > 0 ? days : 1;
     }
 
     public void validateDates() {
-        if (durationInDays() >= 0) {
+        if (!finish.isAfter(start)) {
             throw new DomainExceptions("Quantidade de dias inválido!");
         }
     }
