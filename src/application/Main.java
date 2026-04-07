@@ -5,9 +5,13 @@ import model.entities.HeavyEquipment;
 import model.entities.Rent;
 import model.entities.Tool;
 import model.exceptions.DomainExceptions;
+import model.services.DiscountService;
+import model.services.StandardDiscountService;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +19,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         Locale.setDefault(Locale.US);
         Scanner scan = new Scanner(System.in);
@@ -34,8 +40,10 @@ public class Main {
                 String modelEquipment = scan.nextLine();
                 System.out.print("Digite o preço da diária: ");
                 double dailyPrice = scan.nextDouble();
-                System.out.print("Quantos dias de aluguel? ");
-                int daysRental = scan.nextInt();
+                System.out.print("Data de Retirada (dd/MM/yyyy HH:mm):");
+                LocalDateTime start = LocalDateTime.parse(scan.nextLine(), dtf);
+                System.out.print("Data de Devolução (dd/MM/yyyy HH:mm):");
+                LocalDateTime finish = LocalDateTime.parse(scan.nextLine(), dtf);
                 double transportFee;
                 if (ch == 's') {
                     System.out.print("Taxa de transporte: ");
@@ -44,7 +52,8 @@ public class Main {
                 } else {
                     equipment = new Tool(modelEquipment, dailyPrice);
                 }
-                rent = new Rent(equipment, daysRental);
+                DiscountService discountService = new StandardDiscountService();
+                rent = new Rent(discountService, equipment, finish, start);
                 rent.calculateFinalPrice();
                 rentals.add(rent);
                 System.out.println("(Adicionado à lista!)");

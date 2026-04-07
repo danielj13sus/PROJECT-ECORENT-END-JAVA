@@ -2,28 +2,45 @@
 package model.entities;
 
 import model.exceptions.DomainExceptions;
+import model.services.DiscountService;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Rent {
 
     private Equipment equipment;
-    private Integer days;
+    private LocalDateTime start;
+    private LocalDateTime finish;
     private Double total;
+
+    private DiscountService discountService;
 
     public Rent() {
     }
 
-    public Rent(Equipment equipment, Integer days) {
+    public Rent(DiscountService discountService, Equipment equipment, LocalDateTime finish, LocalDateTime start) {
+        this.discountService = discountService;
         this.equipment = equipment;
-        this.days = days;
-        validateDays();
+        this.finish = finish;
+        this.start = start;
+        validateDates();
     }
 
-    public Integer getDays() {
-        return days;
+    public LocalDateTime getFinish() {
+        return finish;
     }
 
-    public void setDays(Integer days) {
-        this.days = days;
+    public void setFinish(LocalDateTime finish) {
+        this.finish = finish;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
     public Double getTotal() {
@@ -39,15 +56,16 @@ public class Rent {
     }
 
     public void calculateFinalPrice() {
-        double baseValue = equipment.totalCost(days);
-        if (days > 7) {
-            baseValue *= 0.90;
-        }
-        this.total = baseValue;
+        double baseValue = equipment.totalCost(durationInDays());
+        this.total = discountService.applyDiscount(baseValue, durationInDays());
     }
 
-    public void validateDays() {
-        if (days <= 0) {
+    public int durationInDays() {
+        return (int) Duration.between(getStart(), getFinish()).toDays();
+    }
+
+    public void validateDates() {
+        if (durationInDays() >= 0) {
             throw new DomainExceptions("Quantidade de dias inválido!");
         }
     }
@@ -57,7 +75,7 @@ public class Rent {
         return "Dados do aluguel: " + "\n" +
                 "Modelo: " + equipment.getModel() + "\n" +
                 String.format("Preço diária: %.2f%n", equipment.getDailyPrice()) +
-                "Dias: " + days + "\n" +
+                "Dias: " + durationInDays() + "\n" +
                 String.format("Valor total a pagar: R$ %.2f%n", total);
     }
 }
