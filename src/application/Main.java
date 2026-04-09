@@ -4,6 +4,7 @@ import model.entities.Equipment;
 import model.entities.HeavyEquipment;
 import model.entities.Rent;
 import model.entities.Tool;
+import model.enums.RentStatus;
 import model.exceptions.DomainExceptions;
 import model.services.DiscountService;
 import model.services.StandardDiscountService;
@@ -38,10 +39,10 @@ public class Main {
                 String modelEquipment = scan.nextLine();
                 System.out.print("Digite o preço da diária: ");
                 double dailyPrice = scan.nextDouble();
-                System.out.print("Data de Retirada (dd/MM/yyyy HH:mm):");
+                System.out.print("Data de Retirada (dd/MM/yyyy HH:mm): ");
                 scan.nextLine();
                 LocalDateTime start = LocalDateTime.parse(scan.nextLine(), dtf);
-                System.out.print("Data de Devolução (dd/MM/yyyy HH:mm):");
+                System.out.print("Data de Devolução (dd/MM/yyyy HH:mm): ");
                 LocalDateTime finish = LocalDateTime.parse(scan.nextLine(), dtf);
                 double transportFee;
                 if (ch == 's') {
@@ -53,7 +54,11 @@ public class Main {
                 }
                 DiscountService discountService = new StandardDiscountService();
                 rent = new Rent(discountService, equipment, start, finish);
-                rent.calculateFinalPrice();
+                System.out.print("Deseja finalizar o aluguel agora? (s/n): ");
+                char validStatus = scan.next().charAt(0);
+                if (validStatus == 's'){
+                    rent.finishRent();
+                }
                 rentals.add(rent);
                 System.out.println("(Adicionado à lista!)");
             }
@@ -86,7 +91,8 @@ public class Main {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("summary.csv"))) {
 
             for (Rent he: rentals) {
-                bw.write(he.getEquipment().getModel() + "," + String.format("%.2f", he.getTotal()));
+                String totalCsv = (he.getTotal() != null) ? String.format("%.2f", he.getTotal()) : RentStatus.IN_PROGRESS.getDescricao();
+                bw.write(he.getEquipment().getModel() + "," + totalCsv);
                 bw.newLine();
             }
 
