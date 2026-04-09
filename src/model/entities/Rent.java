@@ -1,6 +1,7 @@
 
 package model.entities;
 
+import model.enums.RentStatus;
 import model.exceptions.DomainExceptions;
 import model.services.DiscountService;
 
@@ -14,6 +15,7 @@ public class Rent {
     private LocalDateTime finish;
     private Double total;
 
+    private RentStatus status;
     private DiscountService discountService;
 
     public Rent() {
@@ -24,7 +26,16 @@ public class Rent {
         this.equipment = equipment;
         this.start = start;
         this.finish = finish;
+        this.status = RentStatus.IN_PROGRESS;
         validateDates();
+    }
+
+    public RentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RentStatus status) {
+        this.status = status;
     }
 
     public LocalDateTime getFinish() {
@@ -56,8 +67,12 @@ public class Rent {
     }
 
     public void calculateFinalPrice() {
-        double baseValue = equipment.totalCost(durationInDays());
-        this.total = discountService.applyDiscount(baseValue, durationInDays());
+        if (status == RentStatus.FINISHED) {
+            double baseValue = equipment.totalCost(durationInDays());
+            this.total = discountService.applyDiscount(baseValue, durationInDays());
+        } if (status == RentStatus.CANCELED) {
+            this.total = 0.0;
+        }
     }
 
     public int durationInDays() {
@@ -71,12 +86,23 @@ public class Rent {
         }
     }
 
+    public void finishRent() {
+        this.status = RentStatus.FINISHED;
+        calculateFinalPrice();
+    }
+
+    public String stringReturn() {
+        String returnTotal = status == RentStatus.FINISHED ? String.format("Valor total a pagar: R$ %.2f%n", total) : "Aluguel ainda não finalizado";
+        return returnTotal;
+    }
+
     @Override
     public String toString() {
         return "Dados do aluguel: " + "\n" +
                 "Modelo: " + equipment.getModel() + "\n" +
                 String.format("Preço diária: %.2f%n", equipment.getDailyPrice()) +
                 "Dias: " + durationInDays() + "\n" +
-                String.format("Valor total a pagar: R$ %.2f%n", total);
+                "Status do aluguel: " + status.getDescricao() + "\n" +
+                stringReturn();
     }
 }
