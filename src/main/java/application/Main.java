@@ -14,7 +14,9 @@ import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -79,12 +81,27 @@ public class Main {
         } while (verif == 's');
 
         System.out.println("--- RELATÓRIO FINAL ---");
-        for (Rent x: rentals) {
-            int pos = rentals.indexOf(x);
-            pos++;
-            System.out.print(pos + ". " + x);
-            System.out.println();
-        }
+
+        List<Rent> rents = rentals.stream()
+                .filter(r -> r.getStatus() == RentStatus.FINISHED)
+                .sorted((r1, r2) -> r2.getTotal().compareTo(r1.getTotal()))
+                .collect(Collectors.toList());
+
+        rents.stream()
+                .forEach(System.out::println);
+
+        double soma = rentals.stream()
+                .filter(r -> r.getStatus() == RentStatus.FINISHED)
+                .mapToDouble(Rent::getTotal)
+                .sum();
+        System.out.printf("Faturamento Total (Finalizados): R$ %.2f%n", soma);
+
+//        for (Rent x: rentals) {
+//            int pos = rentals.indexOf(x);
+//            pos++;
+//            System.out.print(pos + ". " + x);
+//            System.out.println();
+//        }
 
         scan.close();
 

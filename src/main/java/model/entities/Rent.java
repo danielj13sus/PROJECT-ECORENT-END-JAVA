@@ -7,6 +7,7 @@ import model.services.DiscountService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Rent {
 
@@ -94,6 +95,18 @@ public class Rent {
     public String stringReturn() {
         String returnTotal = status == RentStatus.FINISHED ? String.format("Valor total a pagar: R$ %.2f%n", total) : "Aluguel ainda não finalizado";
         return returnTotal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Rent rent = (Rent) o;
+        return Objects.equals(getTotal(), rent.getTotal());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getTotal());
     }
 
     @Override
