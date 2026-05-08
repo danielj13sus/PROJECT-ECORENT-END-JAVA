@@ -6,8 +6,7 @@ public class StandardDiscountService implements DiscountService {
     public double applyDiscount(double baseValue, int days) {
         if (days > 7) {
            return baseValue * 0.90;
-        } else  {
-            return baseValue;
         }
+        return baseValue;
     }
 }

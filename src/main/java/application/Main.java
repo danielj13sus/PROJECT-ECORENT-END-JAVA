@@ -8,6 +8,7 @@ import model.enums.RentStatus;
 import model.exceptions.DomainExceptions;
 import model.services.DiscountService;
 import model.services.StandardDiscountService;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -16,8 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
+@SpringBootApplication(scanBasePackages = "model")
 public class Main {
     public static void main(String[] args) {
 
@@ -80,28 +81,31 @@ public class Main {
             System.out.println();
         } while (verif == 's');
 
-        System.out.println("--- RELATÓRIO FINAL ---");
+        System.out.println("==================================");
+        System.out.println("--- DASHBOARD EXECUTIVO ---");
+        System.out.println("==================================");
 
-        List<Rent> rents = rentals.stream()
-                .filter(r -> r.getStatus() == RentStatus.FINISHED)
-                .sorted((r1, r2) -> r2.getTotal().compareTo(r1.getTotal()))
-                .collect(Collectors.toList());
-
-        rents.stream()
-                .forEach(System.out::println);
-
-        double soma = rentals.stream()
+        double lucroTotal = rentals.stream()
                 .filter(r -> r.getStatus() == RentStatus.FINISHED)
                 .mapToDouble(Rent::getTotal)
                 .sum();
-        System.out.printf("Faturamento Total (Finalizados): R$ %.2f%n", soma);
+        System.out.printf("Faturamento Total (Finalizados): R$ %.2f%n", lucroTotal);
 
-//        for (Rent x: rentals) {
-//            int pos = rentals.indexOf(x);
-//            pos++;
-//            System.out.print(pos + ". " + x);
-//            System.out.println();
-//        }
+        long totalPesadas = rentals.stream()
+                .filter(r -> r.getEquipment() instanceof HeavyEquipment)
+                .count();
+        System.out.println("Total de Máquinas Pesadas Alugadas: " + totalPesadas);
+
+        System.out.println("\n--- TOP ALUGUEIS MAIS CAROS (FINALIZADOS) ---");
+
+        rentals.stream()
+                .filter(r -> r.getStatus() == RentStatus.FINISHED)
+                .sorted((r1, r2) -> r2.getTotal().compareTo(r1.getTotal()))
+                .forEach(r -> {
+                    System.out.println("- " + r.getEquipment().getModel() + ": R$ " + String.format("%.2f", r.getTotal()));
+                });
+
+        System.out.println("==================================\n");
 
         scan.close();
 
