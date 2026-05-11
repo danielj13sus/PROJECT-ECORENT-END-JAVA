@@ -2,7 +2,9 @@
 package model.entities;
 
 import model.exceptions.DomainExceptions;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class Equipment {
 
     private String model;

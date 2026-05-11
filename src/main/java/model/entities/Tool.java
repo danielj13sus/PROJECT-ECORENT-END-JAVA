@@ -1,6 +1,10 @@
 
 package model.entities;
 
+import org.springframework.stereotype.Component;
+
+@Component
+
 public class Tool extends Equipment {
 
     public Tool() {

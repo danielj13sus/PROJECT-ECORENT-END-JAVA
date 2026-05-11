@@ -2,6 +2,9 @@
 package model.entities;
 
 import model.exceptions.DomainExceptions;
+import org.springframework.stereotype.Component;
+
+@Component
 
 public class HeavyEquipment extends Equipment {
 
