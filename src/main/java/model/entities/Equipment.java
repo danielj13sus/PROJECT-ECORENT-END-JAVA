@@ -2,6 +2,7 @@
 package model.entities;
 
 import model.exceptions.DomainExceptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +14,7 @@ public abstract class Equipment {
     public Equipment() {
     }
 
+    @Autowired
     public Equipment(String model, Double dailyPrice) {
         if (dailyPrice <= 0) {
             throw new DomainExceptions("Preço da diária inválido!");

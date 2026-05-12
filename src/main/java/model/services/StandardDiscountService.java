@@ -3,7 +3,6 @@ package model.services;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class StandardDiscountService implements DiscountService {
 
     @Override

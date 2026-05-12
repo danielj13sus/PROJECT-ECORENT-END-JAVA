@@ -4,6 +4,7 @@ package model.entities;
 import model.enums.RentStatus;
 import model.exceptions.DomainExceptions;
 import model.services.DiscountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -11,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Component
-
 public class Rent {
 
     private Equipment equipment;
@@ -25,6 +25,7 @@ public class Rent {
     public Rent() {
     }
 
+    @Autowired
     public Rent(DiscountService discountService, Equipment equipment, LocalDateTime start, LocalDateTime finish) {
         this.discountService = discountService;
         this.equipment = equipment;

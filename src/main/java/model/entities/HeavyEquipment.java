@@ -2,10 +2,10 @@
 package model.entities;
 
 import model.exceptions.DomainExceptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class HeavyEquipment extends Equipment {
 
     private Double transportFee;
@@ -14,6 +14,7 @@ public class HeavyEquipment extends Equipment {
         super();
     }
 
+    @Autowired
     public HeavyEquipment(String model, Double dailyPrice, Double transportFee) {
         super(model, dailyPrice);
         if (transportFee <= 0) {
