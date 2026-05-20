@@ -123,6 +123,8 @@ public class Main {
             System.out.println("Erro crítico ao gerar o relatório: " + e.getMessage());;
         }
 
+        scan.close();
+
     }
 }
 
