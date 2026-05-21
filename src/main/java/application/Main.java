@@ -31,7 +31,7 @@ public class Main {
         Equipment equipment;
         Rent rent;
 
-        char verif;
+        char verif = 0;
         do {
             try {
                 System.out.println("--- NOVO ALUGUEL ---");
@@ -64,6 +64,13 @@ public class Main {
                 }
                 rentals.add(rent);
                 System.out.println("(Adicionado à lista!)");
+                System.out.println();
+
+                System.out.println("------------------------------");
+                System.out.print("Deseja registrar mais um aluguel? (s/n): ");
+                verif = scan.next().charAt(0);
+                scan.nextLine();
+                System.out.println();
             }
             catch (DomainExceptions e) {
                 System.out.println(e.getMessage());
@@ -74,11 +81,6 @@ public class Main {
             } catch (DateTimeParseException e) {
                 System.out.println("Erro: Formato de data inválido!");
             }
-
-            System.out.print("Deseja registrar mais um aluguel? (s/n): ");
-            verif = scan.next().charAt(0);
-            scan.nextLine();
-            System.out.println();
         } while (verif == 's');
 
         System.out.println("==================================");
